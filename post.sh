@@ -8,6 +8,9 @@ mkdir -p "$HOME_DIR"
 # fish をデフォルトシェルに設定
 chsh -s /usr/bin/fish rlynick
 
+# パスワード無効化
+passwd -d rlynick
+
 # sudo 権限付与
 echo "rlynick ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/rlynick
 
