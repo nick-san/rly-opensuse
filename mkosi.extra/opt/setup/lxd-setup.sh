@@ -2,7 +2,7 @@
 set -e
 
 OPENWRT_IMAGE="/opt/images/openwrt-test-container.tar.gz"
-CONTAINER_NAME="openwrt-router"
+CONTAINER_NAME="xg-router"
 IMAGE_ALIAS="openwrt-img"
 
 PHY_NIC_WAN="eth1"
