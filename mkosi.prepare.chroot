@@ -1,0 +1,11 @@
+#!/bin/bash
+set -e
+
+echo "Cloning dotfiles..."
+# ネットワークアクセスがあるため、ここで git clone を実行
+git clone https://github.com/nick-san/dotfiles.git /home/rlynick/dotfiles
+
+# (オプション) クローン後に所有者を変更
+# chown -R rlynick:rlynick /home/rlynick/dotfiles
+
+echo "Dotfiles cloned successfully."
