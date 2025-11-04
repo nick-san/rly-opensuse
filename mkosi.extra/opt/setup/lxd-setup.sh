@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-OPENWRT_IMAGE="/opt/images/openwrt-test-container.tar.gz"
+OPENWRT_IMAGE="/opt/images/xg-router.tar.gz"
 CONTAINER_NAME="xg-router"
 IMAGE_ALIAS="openwrt-img"
 
