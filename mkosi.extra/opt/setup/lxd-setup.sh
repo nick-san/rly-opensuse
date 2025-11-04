@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-OPENWRT_IMAGE="/opt/images/openwrt.tar.gz"
+OPENWRT_IMAGE="/opt/images/openwrt-test-container.tar.gz"
 CONTAINER_NAME="openwrt-router"
 IMAGE_ALIAS="openwrt-img"
 
@@ -11,13 +11,11 @@ PHY_NIC_LAN="eth2"
 
 echo "LXD Router Setup: Starting..."
 
-# snapdが完全に準備できるのを待つ
-echo "Waiting for snapd to be ready..."
-snap wait system seed.loaded
-
-# LXDをインストール
-echo "Installing/Refreshing LXD snap..."
-snap install lxd
+echo "Waiting for LXD daemon (lxd ready)..."
+while ! lxd ready; do
+    echo "Waiting..."
+    sleep 2
+done
 
 # LXDデーモンが起動するのを待つ
 echo "Waiting for LXD daemon..."

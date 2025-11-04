@@ -1,8 +1,7 @@
 [Unit]
 Description=LXD OpenWrt Router First-Boot Setup
-# snapdがLXDをインストールし、ネットワークが準備できてから実行
-After=network-online.target snapd.service
-Wants=network-online.target snapd.service
+After=network-online.target lxd.service
+Wants=network-online.target lxd.service
 
 [Service]
 Type=oneshot

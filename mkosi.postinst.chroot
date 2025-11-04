@@ -19,10 +19,8 @@ usermod -aG "$SUDO_GROUP" "$USERNAME"
 echo "User '$USERNAME' created."
 
 # 3. サービスの有効化
-echo "Enabling snapd socket (for LXD)..."
-systemctl enable snapd.socket
-
 echo "Enabling LXD first-boot setup service..."
+systemctl enable lxd.service
 systemctl enable lxd-router-setup.service
 
 echo "Post-install complete."
