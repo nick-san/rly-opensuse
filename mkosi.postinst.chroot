@@ -2,32 +2,27 @@
 set -e
 
 USERNAME="rlynick"
-PASSWORD="linux"
+PASSWORD="your_password_here" # ⬅️ mkosi.conf と同じパスワード
 SUDO_GROUP="wheel" 
 
-# ----------------------------------------------------
-# ユーザー作成の実行
-# ----------------------------------------------------
+# 1. ユーザー作成
 echo "Creating user '$USERNAME'..."
-
-# ユーザーを作成
 useradd --create-home \
         --user-group "$USERNAME" \
         --password "$(echo "$PASSWORD" | openssl passwd -6 -stdin)"
 
-# ----------------------------------------------------
-# 修正点: 'wheel' グループが存在するか確認し、
-# 存在しない場合は作成する
-# ----------------------------------------------------
 if ! getent group "$SUDO_GROUP" > /dev/null; then
     echo "Group '$SUDO_GROUP' does not exist. Creating it..."
     groupadd "$SUDO_GROUP"
 fi
-
-echo "Adding $USERNAME to $SUDO_GROUP group..."
 usermod -aG "$SUDO_GROUP" "$USERNAME"
+echo "User '$USERNAME' created."
 
-# ⬇️ git clone コマンドはここから削除する
-# (mkosi.prepare.chroot に移動したため)
+# 3. サービスの有効化
+echo "Enabling snapd socket (for LXD)..."
+systemctl enable snapd.socket
 
-echo "User '$USERNAME' created successfully."
+echo "Enabling LXD first-boot setup service..."
+systemctl enable lxd-router-setup.service
+
+echo "Post-install complete."

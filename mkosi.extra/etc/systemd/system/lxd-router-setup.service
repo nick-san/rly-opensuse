@@ -1,0 +1,16 @@
+[Unit]
+Description=LXD OpenWrt Router First-Boot Setup
+# snapdがLXDをインストールし、ネットワークが準備できてから実行
+After=network-online.target snapd.service
+Wants=network-online.target snapd.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/setup/lxd-setup.sh
+# 成功したら、このサービス自身を無効化し、二度と実行されないようにする
+ExecStartPost=/bin/bash -c "systemctl disable lxd-router-setup.service"
+RemainAfterExit=yes
+StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target
