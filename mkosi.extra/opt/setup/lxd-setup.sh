@@ -5,34 +5,44 @@ OPENWRT_IMAGE="/opt/images/openwrt-test-container.tar.gz"
 CONTAINER_NAME="openwrt-router"
 IMAGE_ALIAS="openwrt-img"
 
-# ⬇️ パススルーしたい物理NICのインターフェイス名
 PHY_NIC_WAN="eth1"
 PHY_NIC_LAN="eth2"
 
 echo "LXD Router Setup: Starting..."
 
-echo "Waiting for LXD daemon (lxd ready)..."
-while ! lxd ready; do
-    echo "Waiting..."
+echo "Waiting for LXD daemon (lxc list)..."
+while ! lxc list > /dev/null 2>&1; do
+    echo "Waiting for LXD to respond..."
     sleep 2
 done
 
-# LXDデーモンが起動するのを待つ
-echo "Waiting for LXD daemon..."
-while ! lxd ready; do
-    echo "Waiting..."
-    sleep 2
-done
-
-# LXDを初期化
-echo "Initializing LXD..."
-lxd init --auto
+if [ ! -f /var/lib/lxd/database/global/db.bin ]; then
+    echo "Initializing LXD with minimal preseed (no lxdbr0)..."
+    lxd init --preseed <<EOF
+config: {}
+storage_pools:
+- name: default
+  driver: dir
+profiles:
+- name: default
+  devices:
+    root:
+      path: /
+      pool: default
+      type: disk
+networks: [] # <-- これが重要: lxdbr0 を作成しない
+projects: []
+EOF
+else
+    echo "LXD already initialized."
+fi
 
 # 1. イメージのインポート
 if [ -f "$OPENWRT_IMAGE" ]; then
     if ! lxc image info "$IMAGE_ALIAS" > /dev/null 2>&1; then
         echo "Importing OpenWrt image from $OPENWRT_IMAGE..."
-        lxc import "$OPENWRT_IMAGE" --alias "$IMAGE_ALIAS"
+        # lxc import "$OPENWRT_IMAGE" --alias "$IMAGE_ALIAS"
+        lxc import "$OPENWRT_IMAGE"
     else
         echo "OpenWrt image already imported."
     fi

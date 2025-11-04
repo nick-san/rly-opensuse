@@ -8,7 +8,7 @@ MKOSI = mkosi
 
 # mkosi に常に渡す共通オプション
 # 前回の問題を解決するため --tools-tree=default を設定
-MKOSI_OPTS = --tools-tree=default
+# MKOSI_OPTS = --tools-tree=default
 
 # .PHONY でファイル名とターゲット名が衝突するのを防ぐ
 .PHONY: all build vm shell boot clean distclean
